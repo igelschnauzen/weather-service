@@ -13,14 +13,10 @@ export class AppService {
     console.log(geocodeQueryString);
 
     try {
-      const response = await fetch(geocodeQueryString);
-      if(!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
+      const response = await fetch(geocodeQueryString).then(res => res.json());
 
-      const json = await response.json();
-      const lat = json[0]["lat"];
-      const lon = json[0]["lon"];
+      const lat = response[0]["lat"];
+      const lon = response[0]["lon"];
       console.log(lat, lon);
       return [lat, lon];
     } catch (err) {
