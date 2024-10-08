@@ -1,8 +1,9 @@
 import { PipeTransform, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class LowercaseQueryParamPipe implements PipeTransform {
+export class ToponimicNamePipe implements PipeTransform {
  transform(value: string, metadata: any): string {
-  return value.toLowerCase();
+    //capitalize the first letter, all the rest to lower case
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
  }
 }

@@ -9,15 +9,14 @@ export class AppService {
   async geoCode(city: string): Promise<[number, number]> {
     //fetch the geocoding api, pass the city and get the coords
 
-    const geocodeQueryString: string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${process.env.WEATHERAPI_KEY}`;
+    const geocodeQueryString: string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
     console.log(geocodeQueryString);
 
     try {
       const response = await fetch(geocodeQueryString).then(res => res.json());
-
+      console.log(response);
       const lat = response[0]["lat"];
       const lon = response[0]["lon"];
-      console.log(lat, lon);
       return [lat, lon];
     } catch (err) {
       console.error(err);
@@ -26,7 +25,7 @@ export class AppService {
 
   async getWeather(lat, lon): Promise<string> {
     //get the weather by coords
-    const weatherQueryString: string = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHERAPI_KEY}`;
+    const weatherQueryString: string = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
     console.log(weatherQueryString);
 
     try {
@@ -63,13 +62,11 @@ export class AppService {
       }
     });
 
-    console.log(await cityWeather);
-
     if(!(await cityWeather)) {
       let fetchedWeather = await this.fetchWeatherFromApi(city);
 
       let dto: CreateCityDto = new CreateCityDto(
-        fetchedWeather.name, 
+        city, 
         fetchedWeather.main.temp, 
         fetchedWeather.main.feels_like, 
         fetchedWeather.main.humidity, 
