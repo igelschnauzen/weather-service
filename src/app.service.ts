@@ -40,7 +40,7 @@ export class AppService {
 
   async getWeather(lat, lon): Promise<string> {
     //get the weather by coords
-    const weatherQueryString: string = `https://api.openweatheermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHERAPI_KEY}`;
+    const weatherQueryString: string = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHERAPI_KEY}`;
     console.log(weatherQueryString);
 
     try {
