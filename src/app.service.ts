@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { createCityDto } from './dto/city.dto'; 
+import { CreateCityDto } from './dto/city.dto'; 
 
 @Injectable()
 export class AppService {
@@ -49,7 +49,7 @@ export class AppService {
 
   async fetchWeatherFromApi(city: string): Promise<any> {
     let geoCode = await this.geoCode(city);
-    let weather;
+    let weather: string;
     
     //timeout: 1 query/sec to openweatherapi if no paid subscription
     return new Promise((resolve, reject) => {
@@ -60,7 +60,7 @@ export class AppService {
     }); 
   }
 
-  async getWeatherFromDb(city: string) {
+  async getWeatherFromDb(city: string): Promise<object> {
     let cityWeather = await this.prisma.city.findUnique({
       where: {
         name: city
@@ -72,14 +72,14 @@ export class AppService {
     if(!(await cityWeather)) {
       let fetchedWeather = await this.fetchWeatherFromApi(city);
 
-      let dto: createCityDto = {
-        name: fetchedWeather.name,
-        current_temp: fetchedWeather.main.temp,
-        current_feels_like: fetchedWeather.main.feels_like,
-        current_humidity: fetchedWeather.main.humidity,
-        lat: fetchedWeather.coord.lat,
-        lon: fetchedWeather.coord.lon,
-      }
+      let dto: CreateCityDto = new CreateCityDto(
+        fetchedWeather.name, 
+        fetchedWeather.main.temp, 
+        fetchedWeather.main.feels_like, 
+        fetchedWeather.main.humidity, 
+        fetchedWeather.coord.lat,
+        fetchedWeather.coord.lon 
+      );
 
       cityWeather = await this.prisma.city.create({
         data: dto,

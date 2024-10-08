@@ -1,6 +1,7 @@
 import {IsInt, isNumber, IsNumber, IsString} from "class-validator";
 
-export class createCityDto {
+export class CreateCityDto {
+    
     @IsString()
     name: string
 
@@ -18,4 +19,13 @@ export class createCityDto {
 
     @IsNumber()
     lon: number
+
+    constructor(name, current_temp, current_feels_like, current_humidity, lat, lon) {
+        this.name = name;
+        this.current_temp = current_temp;
+        this.current_feels_like = current_feels_like;
+        this.current_humidity = current_humidity;
+        this.lat = lat;
+        this.lon = lon;
+    }
 }
