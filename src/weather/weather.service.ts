@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { CreateCityDto } from './dto/city.dto'; 
+import { PrismaService } from '../prisma.service';
+import { CreateCityDto } from './city.dto'; 
 
 @Injectable()
-export class AppService {
+export class WeatherService {
   constructor(private prisma: PrismaService){}
 
   async geoCode(city: string): Promise<[number, number]> {
