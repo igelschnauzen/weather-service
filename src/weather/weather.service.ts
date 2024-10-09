@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateCityDto } from './city.dto'; 
+import { CreateCityDto } from '../dto/city.dto'; 
 
 @Injectable()
 export class WeatherService {
