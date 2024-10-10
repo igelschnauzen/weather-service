@@ -6,20 +6,23 @@ import { PrismaService } from 'src/prisma.service';
 export class UpdateService implements OnModuleInit {
     constructor(private prisma: PrismaService){}
 
+    async cleanOutdated(): Promise<void> {
+      const sixHoursAgo = new Date();
+      sixHoursAgo.setHours(sixHoursAgo.getHours() - 6); 
+      await this.prisma.city.deleteMany({
+        where: {
+         updatedAt: { lt: sixHoursAgo },
+        },
+      });
+      console.log('Deleting outdated data from db...');
+    }
+
     async onModuleInit() {
-      
+      await this.cleanOutdated();
+
       setInterval(async () => {
-        
-        const fourHoursAgo = new Date();
-        fourHoursAgo.setHours(fourHoursAgo.getHours() - 4); 
+        await this.cleanOutdated();
 
-        await this.prisma.city.deleteMany({
-          where: {
-           updatedAt: { lt: fourHoursAgo },
-          },
-        });
-
-        console.log('Deleting outdated data...');
       }, 1000 * 60 * 30); //checking for outdated data in every 30 minutes
     }
 }

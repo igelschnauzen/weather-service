@@ -8,6 +8,7 @@ import { CacheInterceptor } from '@nestjs/cache-manager';
 import { WeatherService } from './weather.service';
 import { PrismaService } from '../prisma.service';
 import { ToponimicNamePipe } from '../pipes/lowercase-query-param.pipe';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Controller()
 export class WeatherController {
@@ -19,13 +20,19 @@ export class WeatherController {
     return this.WeatherService.getWeatherFromDb(city);
   }
 
-  @Get("cleanCache")
-  async cleanCache(): Promise<any> {
+  @Get('cleanCache/:password')
+  async cleanCache(@Param('password') password: string): Promise<any> {
+    if (!this.WeatherService.validatePassword(password)) {
+      throw new UnauthorizedException('Invalid password!');
+    }
     return this.WeatherService.cleanCache();
   }
 
-  @Get("cleanDb")
-  async cleanDb(): Promise<any> {
+  @Get('cleanDb/:password')
+  async cleanDb(@Param('password') password: string): Promise<any> {
+    if (!this.WeatherService.validatePassword(password)) {
+      throw new UnauthorizedException('Invalid password!');
+    }
     return this.WeatherService.cleanDb();
   }
 }

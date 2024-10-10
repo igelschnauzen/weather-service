@@ -96,6 +96,10 @@ export class WeatherService {
     return cityWeather;
   }
 
+  validatePassword(password): boolean {
+    return password === process.env.DATABASE_PASSWORD;
+  }
+
   async cleanCache(): Promise<string> {
     console.log("Cache cleaned!");
     await this.cacheManager.reset();
