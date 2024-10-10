@@ -11,4 +11,14 @@ export class WeatherController {
   async getWeather(@Param("city", ToponimicNamePipe) city: string): Promise<any> {
     return this.WeatherService.getWeatherFromDb(city);
   }
+
+  @Get("cleanCache")
+  async cleanCache(): Promise<any> {
+    return this.WeatherService.cleanCache();
+  }
+
+  @Get("cleanDb")
+  async cleanDb(): Promise<any> {
+    return this.WeatherService.cleanDb();
+  }
 }

@@ -19,7 +19,7 @@ export class WeatherService {
       console.log("Cache hit!");
       return cachedCoords;
     }
-    
+
     const geocodeQueryString: string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
     console.log(geocodeQueryString);
 
@@ -94,5 +94,17 @@ export class WeatherService {
     }
 
     return cityWeather;
+  }
+
+  async cleanCache(): Promise<string> {
+    console.log("Cache cleaned!");
+    await this.cacheManager.reset();
+    return "Cache cleaned!";
+  }
+
+  async cleanDb(): Promise<string> {
+    console.log("DB cleaned!");
+    await this.prisma.city.deleteMany();
+    return "DB cleaned!";
   }
 }
