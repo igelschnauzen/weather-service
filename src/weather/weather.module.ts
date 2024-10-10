@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from '../prisma.service';
 import { UpdateService } from './update.service';
 import { CacheModule } from '@nestjs/cache-manager';
+import { CacheService } from 'src/redis.service';
 
 @Module({
   imports: [ConfigModule.forRoot(), CacheModule.register({
@@ -12,6 +13,6 @@ import { CacheModule } from '@nestjs/cache-manager';
     max: 1000, //max items in cache
   })],
   controllers: [WeatherController],
-  providers: [WeatherService, UpdateService,PrismaService],
+  providers: [WeatherService, UpdateService,PrismaService, CacheService],
 })
 export class WeatherModule {}

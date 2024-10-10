@@ -3,21 +3,22 @@ import { PrismaService } from '../prisma.service';
 import { CreateCityDto } from '../dto/city.dto'; 
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CacheService } from 'src/redis.service';
 
 @Injectable()
 export class WeatherService {
   constructor(
     private prisma: PrismaService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    private readonly cacheService: CacheService
   ){}
 
   async geoCode(city: string): Promise<[number, number]> {
     //fetch the geocoding api, pass the city and get the coords
 
-    const cachedCoords = await this.cacheManager.get<[number, number]>(city);
+    const cachedCoords = await this.cacheService.get(city);
     if (cachedCoords) {
       console.log("Cache hit!");
-      return cachedCoords;
+      return [Number(cachedCoords.split(",")[0]), Number(cachedCoords.split(",")[1])];
     }
 
     const geocodeQueryString: string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
@@ -25,10 +26,12 @@ export class WeatherService {
 
     try {
       const response = await fetch(geocodeQueryString).then(res => res.json());
-      console.log(response);
+      console.log(response); 
+
       const lat = response[0]["lat"];
       const lon = response[0]["lon"];
-      await this.cacheManager.set(city, [lat, lon]).then(() => console.log("cached!")); //caching the coords for 1 hour
+
+      await this.cacheService.set(city, [lat, lon].toString()).then(() => console.log("cached!")); //caching the coords for 1 hour
       return [lat, lon];
     } catch (err) {
       console.error(err);
@@ -36,7 +39,7 @@ export class WeatherService {
     
   }
 
-  async getWeather(lat, lon): Promise<string> {
+  async getWeather(lat: number, lon: number): Promise<string> {
     //get the weather by coords
 
     const weatherQueryString: string = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
@@ -102,7 +105,7 @@ export class WeatherService {
 
   async cleanCache(): Promise<string> {
     console.log("Cache cleaned!");
-    await this.cacheManager.reset();
+    await this.cacheService.reset();
     return "Cache cleaned!";
   }
 
