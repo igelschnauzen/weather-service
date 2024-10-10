@@ -1,14 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateCityDto } from '../dto/city.dto'; 
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class WeatherService {
-  constructor(private prisma: PrismaService){}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
+  ){}
 
   async geoCode(city: string): Promise<[number, number]> {
     //fetch the geocoding api, pass the city and get the coords
 
+    const cachedCoords = await this.cacheManager.get<[number, number]>(city);
+    if (cachedCoords) {
+      console.log("Cache hit!");
+      return cachedCoords;
+    }
+    
     const geocodeQueryString: string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
     console.log(geocodeQueryString);
 
@@ -17,14 +28,17 @@ export class WeatherService {
       console.log(response);
       const lat = response[0]["lat"];
       const lon = response[0]["lon"];
+      await this.cacheManager.set(city, [lat, lon]).then(() => console.log("cached!")); //caching the coords for 1 hour
       return [lat, lon];
     } catch (err) {
       console.error(err);
     }
+    
   }
 
   async getWeather(lat, lon): Promise<string> {
     //get the weather by coords
+
     const weatherQueryString: string = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.WEATHERAPI_KEY}`;
     console.log(weatherQueryString);
 
