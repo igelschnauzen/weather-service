@@ -1,10 +1,4 @@
-import { 
-  Controller, 
-  Get, 
-  Param, 
-  UseInterceptors 
-} from '@nestjs/common';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { Controller, Get, Param } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import { PrismaService } from '../prisma.service';
 import { ToponimicNamePipe } from '../pipes/lowercase-query-param.pipe';
@@ -14,7 +8,6 @@ import { UnauthorizedException } from '@nestjs/common';
 export class WeatherController {
   constructor(private readonly WeatherService: WeatherService, private prisma: PrismaService) {}
 
-  @UseInterceptors(CacheInterceptor)
   @Get("get/:city")
   async getWeather(@Param("city", ToponimicNamePipe) city: string): Promise<any> {
     return this.WeatherService.getWeatherFromDb(city);

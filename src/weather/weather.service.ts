@@ -1,8 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateCityDto } from '../dto/city.dto'; 
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CacheService } from 'src/redis.service';
 
 @Injectable()
@@ -15,9 +13,9 @@ export class WeatherService {
   async geoCode(city: string): Promise<[number, number]> {
     //fetch the geocoding api, pass the city and get the coords
 
-    const cachedCoords = await this.cacheService.get(city);
+    const cachedCoords = await this.cacheService.get("coords:" + city);
     if (cachedCoords) {
-      console.log("Cache hit!");
+      console.log("Cache hit! (coords)");
       return [Number(cachedCoords.split(",")[0]), Number(cachedCoords.split(",")[1])];
     }
 
@@ -31,7 +29,7 @@ export class WeatherService {
       const lat = response[0]["lat"];
       const lon = response[0]["lon"];
 
-      await this.cacheService.set(city, [lat, lon].toString()).then(() => console.log("cached!")); //caching the coords for 1 hour
+      await this.cacheService.set("coords:" + city, [lat, lon].toString()).then(() => console.log("cached!")); //caching the coords
       return [lat, lon];
     } catch (err) {
       console.error(err);
@@ -73,6 +71,12 @@ export class WeatherService {
   }
 
   async getWeatherFromDb(city: string): Promise<object> {
+    const cachedWeather = await this.cacheService.get("weather:" + city);
+    if (cachedWeather) {
+      console.log("Cache hit! (city)");
+      return JSON.parse(cachedWeather);
+    }
+
     let cityWeather = await this.prisma.city.findUnique({
       where: {
         name: city
@@ -95,6 +99,7 @@ export class WeatherService {
         data: dto,
       });
     }
+    await this.cacheService.set("weather:" + city, JSON.stringify(cityWeather), 3600); //caching the weather for 1 hour  
 
     return cityWeather;
   }
