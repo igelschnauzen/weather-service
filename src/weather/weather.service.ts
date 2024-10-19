@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateCityDto } from '../dto/city.dto'; 
-import { CacheService } from 'src/redis.service';
+import { CacheService } from '../redis.service';
 
 @Injectable()
 export class WeatherService {
@@ -23,7 +23,7 @@ export class WeatherService {
     console.log(geocodeQueryString);
 
     try {
-      const response = await fetch(geocodeQueryString).then(res => res.json());
+      const response = await fetch(geocodeQueryString, {signal: AbortSignal.timeout(10000)}).then(res => res.json());
       console.log(response); 
 
       const lat = response[0]["lat"];
@@ -44,7 +44,7 @@ export class WeatherService {
     console.log(weatherQueryString);
 
     try {
-      const response = await fetch(weatherQueryString);
+      const response = await fetch(weatherQueryString, {signal: AbortSignal.timeout(10000)});
       if(!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
