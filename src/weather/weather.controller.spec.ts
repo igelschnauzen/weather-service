@@ -37,18 +37,18 @@ describe('WeatherController', () => {
     const lat = 41.0082;
     const lon = 28.9784;
     const weather = await service.getWeather(lat, lon);
-    expect(weather).toBeDefined()
+    expect(typeof weather).toBe('object');
   });
 
   it('should return weather data from api', async () => {
     const city = "Istanbul";
     const weather = await service.fetchWeatherFromApi(city);
-    expect(weather).toBeDefined();
+    expect(typeof weather).toBe('object');
   });
 
   it('should return weather data from db', async () => {
     const city = "Istanbul";    
     const weather = await service.getWeatherFromDb(city);
-    expect(weather).toBeDefined();
+    expect(typeof weather).toBe('object');
   });
 });
