@@ -1,6 +1,8 @@
+import { space_grotesk } from '@/app/fonts';
+
 export default function Weather() {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 w-11/12 max-w-md text-center">
+    <div className={`${space_grotesk.className} antialiased bg-white rounded-xl shadow-lg p-6 w-11/12 max-w-md text-center`}>
       <h1 className="text-2xl font-bold text-gray-800">City Name</h1>
       <div className="h-px bg-gray-200 my-4"></div>
       <p className="text-lg text-gray-600">Temperature: 25°C</p>

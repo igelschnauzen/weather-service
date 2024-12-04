@@ -11,6 +11,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="en">
       <body className="bg-gradient-to-br from-teal-200 to-pink-100 flex items-center justify-center min-h-screen">
