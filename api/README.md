@@ -1,14 +1,3 @@
-A simple NestJS API for getting JSON weather data by city name
-
-## Technologies Used
-
-- NodeJS
-- TypeScript
-- NestJS
-- Redis
-- PostgreSQL
-- Prisma
-
 ## API endpoints
 
 - **/get/:city**: Get JSON weather by city name
