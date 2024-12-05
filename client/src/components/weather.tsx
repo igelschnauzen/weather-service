@@ -21,9 +21,9 @@ export default function Weather() {
 
   const handleSearch = (city: string): any => {
     fetchWeather(city).then((data) => {
-      setTemp(data.current_temp.toString());
-      setFeelsLike(data.current_feels_like.toString());
-      setHumidity(data.current_humidity.toString());
+      setTemp(data.current_temp.toString() + "°C");
+      setFeelsLike(data.current_feels_like.toString() + "°C");
+      setHumidity(data.current_humidity.toString() + "%");
       setLastUpdated(data.updatedAt);
     }).catch((err) => {
       console.error(err);

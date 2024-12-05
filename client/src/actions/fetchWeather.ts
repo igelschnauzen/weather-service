@@ -12,8 +12,6 @@ interface WeatherData {
 export async function fetchWeather(city: string):Promise<WeatherData> {
     const response = await fetch(`http://localhost:3000/get/${city}`);
 
-    console.log("this is a server-side action!");
-
     if(!response.ok) {
         throw new Error('Failed to fetch data');
     }
