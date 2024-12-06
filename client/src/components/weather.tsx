@@ -30,9 +30,22 @@ export default function Weather() {
     });
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch(city);
+    }
+  }
+
     return (
       <div className={`${space_grotesk.className} antialiased bg-white rounded-xl shadow-lg p-6 w-11/12 max-w-md text-center`}>
-        <input type='text' placeholder='City name' value={city} onChange={handleChange} className='border-2 rounded'></input>
+        <input
+          type='text'
+          placeholder='City name'
+          value={city} onChange={handleChange}
+          onKeyUp={handleKeyPress}
+          className='border-2 rounded'
+        />
+        
         <button className='border-2 rounded m-1' onClick={() => handleSearch(city)}> <Image className="inline-block" src={loupe} width={20} height={20} alt='Find'/> </button>
 
         <div className="h-px bg-gray-200 my-4"></div>
