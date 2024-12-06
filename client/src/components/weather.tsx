@@ -14,24 +14,30 @@ export default function Weather() {
   const [humidity, setHumidity] = useState("");
   const [lastUpdated, setLastUpdated] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCity(e.target.value);
   }
 
-  const handleSearch = (city: string): any => {
-    fetchWeather(city).then((data) => {
+  const handleSearch = async (city: string) => {
+    setLoading(true);
+    try {
+      const data = await fetchWeather(city);
       setTemp(data.current_temp.toString() + "°C");
       setFeelsLike(data.current_feels_like.toString() + "°C");
       setHumidity(data.current_humidity.toString() + "%");
       setLastUpdated(data.updatedAt);
-    }).catch((err) => {
+    } catch (err) {
       console.error(err);
-    });
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !loading) {
       handleSearch(city);
     }
   }
@@ -46,7 +52,13 @@ export default function Weather() {
           className='border-2 rounded'
         />
         
-        <button className='border-2 rounded m-1' onClick={() => handleSearch(city)}> <Image className="inline-block" src={loupe} width={20} height={20} alt='Find'/> </button>
+        <button 
+          className={`border-2 rounded m-1 w-6 inline-block ${loading ? 'bg-gray-200 cursor-default' : ''}`}
+          onClick={() => handleSearch(city)}
+          disabled={loading}
+        >
+          <Image className={`inline-block ${loading ? "opacity-50" : ""}`} src={loupe} width={15} alt='Find'/> 
+        </button>
 
         <div className="h-px bg-gray-200 my-4"></div>
 
