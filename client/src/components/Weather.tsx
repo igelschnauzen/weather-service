@@ -1,7 +1,7 @@
 'use client';
 
 import loupe from '@/assets/loupe.png';
-import Image from 'next/image'
+import Image from 'next/image';
 import { space_grotesk } from '@/assets/fonts';
 import { fetchWeather } from '@/actions/fetchWeather';
 import { ChangeEvent, useState } from 'react';

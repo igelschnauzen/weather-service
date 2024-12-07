@@ -12,11 +12,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
 
+  //we're keeping layout a server component, body is inside a client component for theme changing
   return (
     <html lang="en">
-      <body className="bg-gradient-to-br from-teal-200 to-pink-100 flex items-center justify-center min-h-screen">
-        {children}
-      </body>
+      {children}
     </html>
   );
 }
