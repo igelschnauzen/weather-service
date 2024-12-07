@@ -6,8 +6,9 @@ import { space_grotesk } from '@/assets/fonts';
 import { fetchWeather } from '@/actions/fetchWeather';
 import { ChangeEvent, useState } from 'react';
 import React from 'react';
+import { FC } from 'react';
 
-export default function Weather() {
+const Weather: FC = () => {
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState("");
   const [feelsLike, setFeelsLike] = useState("");
@@ -69,3 +70,5 @@ export default function Weather() {
       </div>
     );
 }
+
+export default Weather;
