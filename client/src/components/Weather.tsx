@@ -1,5 +1,4 @@
 'use client';
-
 import loupe from '@/assets/loupe.png';
 import Image from 'next/image';
 import { space_grotesk } from '@/assets/fonts';
@@ -7,8 +6,11 @@ import { fetchWeather } from '@/actions/fetchWeather';
 import { ChangeEvent, useState } from 'react';
 import React from 'react';
 import { FC } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 const Weather: FC = () => {
+  const { theme } = useTheme();
+
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState("");
   const [feelsLike, setFeelsLike] = useState("");
@@ -44,29 +46,33 @@ const Weather: FC = () => {
   }
 
     return (
-      <div className={`${space_grotesk.className} antialiased bg-white rounded-xl shadow-lg p-6 w-11/12 max-w-md text-center`}>
+      <div className={`${space_grotesk.className} antialiased rounded-xl shadow-lg p-6 w-11/12 max-w-md text-center 
+      ${theme === 'light' ? 'bg-white text-black' : 'bg-gray-800 text-white'}
+      `}>
         <input
           type='text'
           placeholder='City name'
           value={city} onChange={handleChange}
           onKeyUp={handleKeyPress}
-          className='border-2 rounded'
+          className={`border-2 rounded-md m-1 w-48 p-1 ${theme === 'light' ? 'bg-white text-black border-gray-200' : 'bg-gray-800 text-white border-gray-500'}`}
         />
         
         <button 
-          className={`border-2 rounded m-1 w-6 inline-block ${loading ? 'bg-gray-200 cursor-default' : ''}`}
+          className={`border-2 rounded-md p-1 inline-block ${loading ? 'bg-gray-200 cursor-default' : ''}
+          ${theme === 'light' ? 'bg-white text-black border-gray-200' : 'bg-gray-800 text-white border-gray-500'}
+          `}
           onClick={() => handleSearch(city)}
           disabled={loading}
         >
-          <Image className={`inline-block ${loading ? "opacity-50" : ""}`} src={loupe} width={15} alt='Find'/> 
+          <Image className={`inline-block ${loading ? "opacity-50" : ""}`} src={loupe} width={17} alt='Find'/> 
         </button>
 
-        <div className="h-px bg-gray-200 my-4"></div>
+        <div className={ `h-px my-4 ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-600'}` }></div>
 
-        <p className="text-lg text-gray-600">Temperature: {temp}</p>
-        <p className="text-lg text-gray-600">Feels Like: {feelsLike}</p>
-        <p className="text-lg text-gray-600">Humidity: {humidity}</p>
-        <p className="text-sm text-gray-500">Last Updated: {lastUpdated}</p>
+        <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white'} text-lg`}>Temperature: {temp}</p>
+        <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white'} text-lg`}>Feels Like: {feelsLike}</p>
+        <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white'} text-lg`}>Humidity: {humidity}</p>
+        <p className={`${theme === 'light' ? 'text-gray-500' : 'text-gray-300'} text-sm`}>Last Updated: {lastUpdated}</p>
       </div>
     );
 }
