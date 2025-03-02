@@ -6,11 +6,9 @@ import { ConfigModule } from "@nestjs/config";
 import { WeatherService } from "./weather.service";
 
 describe("WeatherService", () => {
-
     let service: WeatherService;
     
     beforeEach(async () => {
-
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigModule.forRoot()], // загрузка .env файла
             providers: [WeatherService, UpdateService, PrismaService, CacheService],
@@ -24,7 +22,6 @@ describe("WeatherService", () => {
         const coords = await service.geoCode(city);
         expect(coords).toEqual([41.0091982, 28.9662187]);
     });
-
     
     it("should return weather for a city", async () => {
         const lat = 41.0082;
